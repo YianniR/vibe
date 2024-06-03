@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Hello World</title>
+  <style>
+    body {
+      width: 500px;
+      height: 400px;
+      padding: 10px;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+    h1 {
+      font-size: 16px;
+      margin: 0 0 10px;
+    }
+    button {
+      padding: 5px 10px;
+      font-size: 14px;
+      margin: 5px 0;
+    }
+    #joke, #wordCount {
+      margin-top: 10px;
+      font-size: 14px;
+    }
+    textarea {
+      width: 100%;
+      height: 80px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Hello, World!</h1>
+  <button id="greetButton">Greet</button>
+  <button id="changeBgButton">Change Background</button>
+  <button id="fetchJokeButton">Fetch Joke</button>
+  <div id="joke"></div>
+  <textarea id="note" placeholder="Write a note..."></textarea>
+  <button id="saveNoteButton">Save Note</button>
+  <button id="getNoteButton">Get Note</button>
+  <button id="getWordCountButton">Get Word Count</button>
+  <div id="wordCount"></div>
+  <script src="popup.js"></script>
+</body>
+</html>
