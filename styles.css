@@ -17,33 +17,58 @@ body {
     background: #fff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
+    overflow: auto; /* Allow vertical scroll if needed */
 }
 
-.grids-container {
+.grid-container {
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.grids-wrapper {
     display: flex;
-    gap: 20px;
-    overflow-x: auto;
+    gap: 10px; /* Adjust gap to fit items */
+    overflow-x: hidden;
+    justify-content: space-between;
 }
 
-.grid-column {
-    min-width: 200px;
+.grid-column, .add-grid-button {
+    flex: 1 1 calc(20% - 8px); /* Adjust to ensure columns fit within the container */
+    max-width: calc(20% - 8px);
     background: #fff;
     border: 1px solid #ccc;
     padding: 10px;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.add-grid-button {
+    background: transparent;
+    border-style: dashed;
 }
 
 .grid-title {
     font-weight: bold;
     margin-bottom: 10px;
     text-align: center;
+    width: 100%; /* Ensure the title takes the full width */
+    box-sizing: border-box;
 }
 
 .grid {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    width: 100%; /* Ensure the grid takes the full width */
+    box-sizing: border-box;
 }
 
 .grid-item {
@@ -59,9 +84,9 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 100%;
-    box-sizing: border-box;
     height: 100px;
+    width: 100%; /* Ensure full width within the column */
+    box-sizing: border-box;
 }
 
 .grid-item img {
@@ -151,4 +176,29 @@ body {
 
 .edit-button:hover, .back-button:hover {
     color: darkgray;
+}
+
+.add-grid-container-button, .addGridButton {
+    display: none;
+    margin: 10px auto;
+    padding: 10px;
+    border: none;
+    background-color: transparent;
+    color: gray;
+    font-size: 24px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    border-style: dashed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.add-grid-container-button:hover, .addGridButton:hover {
+    color: darkgray;
+}
+
+.add-grid-container-button i, .addGridButton i {
+    pointer-events: none;
 }

@@ -17,10 +17,12 @@
                 <input type="text" id="websiteUrl" placeholder="Website URL">
                 <input type="text" id="faviconUrl" placeholder="Favicon URL (optional)">
                 <button id="addWebsiteButton">Add Website</button>
-                <button id="addGridButton">Add Grid</button>
             </div>
         </div>
-        <div class="grids-container" id="gridsContainer"></div>
+        <div id="gridContainersWrapper">
+            <!-- Grid containers will be dynamically added here -->
+        </div>
+        <button id="addGridContainerButton" class="add-grid-container-button"><i class="fas fa-plus"></i></button>
     </div>
     <script src="scripts.js"></script>
 </body>
