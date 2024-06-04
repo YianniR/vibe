@@ -5,13 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Homepage Grid</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <div class="switch">
-        <input type="checkbox" id="editRenderSwitch">
-        <label for="editRenderSwitch"></label>
-        <span id="switchLabel">Render Mode</span>
-    </div>
+    <button id="editModeButton" class="edit-button"><i class="fas fa-cog"></i></button>
     <div class="container">
         <div class="message" id="message"></div>
         <div class="edit-mode">
@@ -20,9 +17,10 @@
                 <input type="text" id="websiteUrl" placeholder="Website URL">
                 <input type="text" id="faviconUrl" placeholder="Favicon URL (optional)">
                 <button id="addWebsiteButton">Add Website</button>
+                <button id="addGridButton">Add Grid</button>
             </div>
         </div>
-        <div class="grid" id="websiteGrid"></div>
+        <div class="grids-container" id="gridsContainer"></div>
     </div>
     <script src="scripts.js"></script>
 </body>

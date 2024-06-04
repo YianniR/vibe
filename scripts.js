@@ -1,4 +1,3 @@
-// Utility functions
 const Utils = {
     isValidUrl: (url) => {
         try {
@@ -35,9 +34,8 @@ const Utils = {
     }
 };
 
-// Website Manager module
 const WebsiteManager = {
-    websites: Utils.loadFromLocalStorage('websites'),
+    grids: Utils.loadFromLocalStorage('grids'),
 
     init: function () {
         this.cacheDom();
@@ -46,79 +44,118 @@ const WebsiteManager = {
     },
 
     cacheDom: function () {
-        this.editRenderSwitch = document.getElementById('editRenderSwitch');
-        this.switchLabel = document.getElementById('switchLabel');
+        this.editModeButton = document.getElementById('editModeButton');
         this.editMode = document.querySelector('.edit-mode');
-        this.websiteGrid = document.getElementById('websiteGrid');
+        this.gridsContainer = document.getElementById('gridsContainer');
         this.addWebsiteButton = document.getElementById('addWebsiteButton');
+        this.addGridButton = document.getElementById('addGridButton');
         this.websiteNameInput = document.getElementById('websiteName');
         this.websiteUrlInput = document.getElementById('websiteUrl');
         this.faviconUrlInput = document.getElementById('faviconUrl');
     },
 
     bindEvents: function () {
-        this.editRenderSwitch.addEventListener('change', this.toggleMode.bind(this));
+        this.editModeButton.addEventListener('click', this.toggleMode.bind(this));
         this.addWebsiteButton.addEventListener('click', this.addWebsite.bind(this));
-        this.websiteGrid.addEventListener('click', this.handleGridClick.bind(this));
-        this.websiteGrid.addEventListener('dragstart', this.onDragStart.bind(this));
-        this.websiteGrid.addEventListener('dragover', this.onDragOver.bind(this));
-        this.websiteGrid.addEventListener('drop', this.onDrop.bind(this));
+        this.addGridButton.addEventListener('click', this.addGrid.bind(this));
+        this.gridsContainer.addEventListener('click', this.handleGridClick.bind(this));
+        this.gridsContainer.addEventListener('dragstart', this.onDragStart.bind(this));
+        this.gridsContainer.addEventListener('dragover', this.onDragOver.bind(this));
+        this.gridsContainer.addEventListener('drop', this.onDrop.bind(this));
     },
 
     render: function () {
-        this.editMode.style.display === 'block' ? this.renderWebsitesForEdit() : this.renderWebsites();
+        if (this.editModeButton.classList.contains('back-button')) {
+            this.toggleEditMode();
+        } else {
+            this.toggleRenderMode();
+        }
     },
 
     toggleMode: function () {
-        if (this.editRenderSwitch.checked) {
-            this.switchLabel.textContent = 'Edit Mode';
-            this.toggleEditMode();
-        } else {
-            this.switchLabel.textContent = 'Render Mode';
+        if (this.editModeButton.classList.contains('back-button')) {
+            this.editModeButton.classList.remove('back-button');
+            this.editModeButton.innerHTML = '<i class="fas fa-cog"></i>';
             this.toggleRenderMode();
+        } else {
+            this.editModeButton.classList.add('back-button');
+            this.editModeButton.innerHTML = '<i class="fas fa-arrow-left"></i>';
+            this.toggleEditMode();
         }
     },
 
     toggleEditMode: function () {
         this.editMode.style.display = 'block';
-        this.renderWebsitesForEdit();
+        this.renderGridsForEdit();
     },
 
     toggleRenderMode: function () {
         this.editMode.style.display = 'none';
-        this.renderWebsites();
+        this.renderGrids();
     },
 
-    renderWebsites: function () {
-        this.websiteGrid.innerHTML = '';
-        this.websites.forEach((website, index) => {
-            const websiteElement = this.createWebsiteElement(website, index, false);
-            this.websiteGrid.appendChild(websiteElement);
+    renderGrids: function () {
+        this.gridsContainer.innerHTML = '';
+        this.grids.forEach((grid, gridIndex) => {
+            const gridElement = this.createGridElement(grid, gridIndex, false);
+            this.gridsContainer.appendChild(gridElement);
         });
     },
 
-    renderWebsitesForEdit: function () {
-        this.websiteGrid.innerHTML = '';
-        this.websites.forEach((website, index) => {
-            const websiteElement = this.createWebsiteElement(website, index, true);
-            this.websiteGrid.appendChild(websiteElement);
+    renderGridsForEdit: function () {
+        this.gridsContainer.innerHTML = '';
+        this.grids.forEach((grid, gridIndex) => {
+            const gridElement = this.createGridElement(grid, gridIndex, true);
+            this.gridsContainer.appendChild(gridElement);
         });
     },
 
-    createWebsiteElement: function (website, index, isEditMode) {
+    createGridElement: function (grid, gridIndex, isEditMode) {
+        const gridElement = document.createElement('div');
+        gridElement.classList.add('grid-column');
+        gridElement.setAttribute('data-grid-index', gridIndex);
+
+        const titleElement = document.createElement('div');
+        titleElement.classList.add('grid-title');
+        titleElement.textContent = grid.title;
+        if (isEditMode) {
+            titleElement.setAttribute('contenteditable', 'true');
+            titleElement.addEventListener('blur', () => {
+                this.updateGridTitle(gridIndex, titleElement.textContent);
+            });
+        }
+
+        gridElement.appendChild(titleElement);
+
+        const websitesContainer = document.createElement('div');
+        websitesContainer.classList.add('grid');
+        websitesContainer.setAttribute('data-grid-index', gridIndex);
+
+        grid.websites.forEach((website, websiteIndex) => {
+            const websiteElement = this.createWebsiteElement(website, gridIndex, websiteIndex, isEditMode);
+            websitesContainer.appendChild(websiteElement);
+        });
+
+        gridElement.appendChild(websitesContainer);
+
+        return gridElement;
+    },
+
+    createWebsiteElement: function (website, gridIndex, websiteIndex, isEditMode) {
         const websiteElement = document.createElement('div');
         websiteElement.classList.add('grid-item');
         websiteElement.setAttribute('draggable', 'true');
-        websiteElement.setAttribute('data-index', index);
+        websiteElement.setAttribute('data-grid-index', gridIndex);
+        websiteElement.setAttribute('data-website-index', websiteIndex);
+
         const favicon = website.favicon ? `<img src="${website.favicon}" alt="Favicon">` : '';
         if (isEditMode) {
             websiteElement.innerHTML = `
                 ${favicon}
-                <input type="text" value="${website.name}" data-index="${index}" class="website-name">
-                <input type="text" value="${website.url}" data-index="${index}" class="website-url">
-                <input type="text" value="${website.favicon || ''}" data-index="${index}"
-                <input type="text" value="${website.favicon || ''}" data-index="${index}" class="favicon-url" placeholder="Favicon URL">
-                <button class="delete-button" data-index="${index}">X</button>
+                <input type="text" value="${website.name}" data-grid-index="${gridIndex}" data-website-index="${websiteIndex}" class="website-name">
+                <input type="text" value="${website.url}" data-grid-index="${gridIndex}" data-website-index="${websiteIndex}" class="website-url">
+                <input type="text" value="${website.favicon || ''}" data-grid-index="${gridIndex}" data-website-index="${websiteIndex}" class="favicon-url" placeholder="Favicon URL">
+                <button class="delete-button" data-grid-index="${gridIndex}" data-website-index="${websiteIndex}">X</button>
             `;
         } else {
             websiteElement.innerHTML = `
@@ -129,6 +166,7 @@ const WebsiteManager = {
                 window.open(website.url, '_blank');
             });
         }
+
         return websiteElement;
     },
 
@@ -142,79 +180,97 @@ const WebsiteManager = {
                 favicon = Utils.getFaviconUrl(url);
             }
             const newWebsite = { name, url, favicon };
-            this.websites.push(newWebsite);
+            const activeGrid = this.grids[0];
+            activeGrid.websites.push(newWebsite);
             this.websiteNameInput.value = '';
             this.websiteUrlInput.value = '';
             this.faviconUrlInput.value = '';
-            Utils.saveToLocalStorage('websites', this.websites);
-            this.renderWebsitesForEdit();
+            Utils.saveToLocalStorage('grids', this.grids);
+            this.renderGridsForEdit();
             Utils.showMessage('Website added successfully!', 'success');
         } else {
             Utils.showMessage('Please enter a valid website name and URL.', 'error');
         }
     },
 
-    deleteWebsite: function (index) {
-        this.websites.splice(index, 1);
-        Utils.saveToLocalStorage('websites', this.websites);
-        this.renderWebsitesForEdit();
+    addGrid: function () {
+        const newGrid = { title: 'New Grid', websites: [] };
+        this.grids.push(newGrid);
+        Utils.saveToLocalStorage('grids', this.grids);
+        this.renderGridsForEdit();
+        Utils.showMessage('New grid added successfully!', 'success');
+    },
+
+    updateGridTitle: function (gridIndex, newTitle) {
+        this.grids[gridIndex].title = newTitle;
+        Utils.saveToLocalStorage('grids', this.grids);
+    },
+
+    deleteWebsite: function (gridIndex, websiteIndex) {
+        this.grids[gridIndex].websites.splice(websiteIndex, 1);
+        Utils.saveToLocalStorage('grids', this.grids);
+        this.renderGridsForEdit();
         Utils.showMessage('Website deleted successfully!', 'success');
     },
 
-    updateWebsites: function () {
-        const nameInputs = document.querySelectorAll('.website-name');
-        const urlInputs = document.querySelectorAll('.website-url');
-        const faviconInputs = document.querySelectorAll('.favicon-url');
-        this.websites = [];
-        nameInputs.forEach((input, index) => {
-            const name = input.value;
-            const url = urlInputs[index].value;
-            const favicon = faviconInputs[index].value;
-            if (name && url) {
-                this.websites.push({ name, url, favicon: Utils.isValidUrl(favicon) ? favicon : null });
-            }
-        });
-        Utils.saveToLocalStorage('websites', this.websites);
-    },
-
     onDragStart: function (e) {
-        this.draggedItemIndex = e.target.getAttribute('data-index');
+        this.draggedItemIndex = e.target.getAttribute('data-website-index');
+        this.draggedGridIndex = e.target.getAttribute('data-grid-index');
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', `${this.draggedGridIndex},${this.draggedItemIndex}`);
         e.target.classList.add('draggable');
     },
 
     onDragOver: function (e) {
         e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
     },
 
     onDrop: function (e) {
         e.preventDefault();
-        const targetElement = e.target.closest('.grid-item');
-        if (targetElement) {
-            const targetIndex = targetElement.getAttribute('data-index');
-            this.reorderWebsites(this.draggedItemIndex, targetIndex);
+        const [fromGridIndex, fromWebsiteIndex] = e.dataTransfer.getData('text/plain').split(',').map(Number);
+        const targetGridElement = e.target.closest('.grid-column');
+
+        if (targetGridElement) {
+            const toGridIndex = Number(targetGridElement.getAttribute('data-grid-index'));
+            const targetWebsiteElement = e.target.closest('.grid-item');
+
+            let toWebsiteIndex = null;
+            if (targetWebsiteElement) {
+                toWebsiteIndex = Number(targetWebsiteElement.getAttribute('data-website-index'));
+            }
+
+            this.moveWebsite(fromGridIndex, fromWebsiteIndex, toGridIndex, toWebsiteIndex);
+        } else {
+            Utils.showMessage('Drop target is invalid.', 'error');
         }
-        const draggableElements = this.websiteGrid.querySelectorAll('.draggable');
-        draggableElements.forEach(el => el.classList.remove('draggable'));
-        Utils.showMessage('Website order updated successfully!', 'success');
+
+        this.gridsContainer.querySelectorAll('.draggable').forEach(el => el.classList.remove('draggable'));
     },
 
-    reorderWebsites: function (fromIndex, toIndex) {
-        const draggedItem = this.websites[fromIndex];
-        this.websites.splice(fromIndex, 1);
-        this.websites.splice(toIndex, 0, draggedItem);
-        Utils.saveToLocalStorage('websites', this.websites);
-        this.renderWebsitesForEdit();
+    moveWebsite: function (fromGridIndex, fromWebsiteIndex, toGridIndex, toWebsiteIndex) {
+        const draggedItem = this.grids[fromGridIndex].websites.splice(fromWebsiteIndex, 1)[0];
+
+        if (toWebsiteIndex !== null && toWebsiteIndex !== undefined) {
+            this.grids[toGridIndex].websites.splice(toWebsiteIndex, 0, draggedItem);
+        } else {
+            this.grids[toGridIndex].websites.push(draggedItem);
+        }
+
+        Utils.saveToLocalStorage('grids', this.grids);
+        this.renderGridsForEdit();
+        Utils.showMessage('Website moved successfully!', 'success');
     },
 
     handleGridClick: function (e) {
         if (e.target.classList.contains('delete-button')) {
-            const index = e.target.getAttribute('data-index');
-            this.deleteWebsite(index);
+            const gridIndex = e.target.getAttribute('data-grid-index');
+            const websiteIndex = e.target.getAttribute('data-website-index');
+            this.deleteWebsite(gridIndex, websiteIndex);
         }
     }
 };
 
-// Initialize the Website Manager
 document.addEventListener('DOMContentLoaded', () => {
     WebsiteManager.init();
 });
