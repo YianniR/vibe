@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { loadWebsitesFromLocalStorage, saveWebsitesToLocalStorage } from '../utils/localStorage';
 
 const initialState = {
-  gridContainers: loadWebsitesFromLocalStorage() || [], // Ensure gridContainers is an empty array if localStorage is empty
+  gridContainers: loadWebsitesFromLocalStorage() || [],
 };
 
 const websiteSlice = createSlice({
@@ -62,9 +62,39 @@ const websiteSlice = createSlice({
         };
         saveWebsitesToLocalStorage(state.gridContainers);
       }
+    },
+    deleteWebsite(state, action) {
+      const { containerIndex, gridIndex, websiteIndex } = action.payload;
+      if (state.gridContainers[containerIndex] && state.gridContainers[containerIndex].grids[gridIndex]) {
+        state.gridContainers[containerIndex].grids[gridIndex].websites.splice(websiteIndex, 1);
+        saveWebsitesToLocalStorage(state.gridContainers);
+      }
+    },
+    deleteGrid(state, action) {
+      const { containerIndex, gridIndex } = action.payload;
+      if (state.gridContainers[containerIndex]) {
+        state.gridContainers[containerIndex].grids.splice(gridIndex, 1);
+        saveWebsitesToLocalStorage(state.gridContainers);
+      }
+    },
+    deleteGridContainer(state, action) {
+      const { containerIndex } = action.payload;
+      state.gridContainers.splice(containerIndex, 1);
+      saveWebsitesToLocalStorage(state.gridContainers);
     }
   },
 });
 
-export const { setWebsites, addWebsite, addGridContainer, addGrid, moveWebsite, updateGridTitle } = websiteSlice.actions;
+export const {
+  setWebsites,
+  addWebsite,
+  addGridContainer,
+  addGrid,
+  moveWebsite,
+  updateGridTitle,
+  deleteWebsite,
+  deleteGrid,
+  deleteGridContainer
+} = websiteSlice.actions;
+
 export default websiteSlice.reducer;

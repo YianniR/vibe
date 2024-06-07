@@ -8,26 +8,27 @@ body {
     align-items: center;
     height: 100vh;
     overflow: hidden;
-  }
-  
-  .container {
-    max-width: 1200px;
-    width: 100%;
+}
+
+.container {
+    width: 50vw; /* Adjusted to take up 90% of the viewport width */
     padding: 20px;
     background: #fff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
-    overflow: auto; /* Allow vertical scroll if needed */
-  }
-  
-  .clock {
+    overflow: auto;
+    /* Allow vertical scroll if needed */
+}
+
+.clock {
     font-size: 5rem;
     margin: 25px auto;
     text-align: center;
-    color: #000; /* Ensure clock text is visible */
-  }
-  
-  .weather-widget {
+    color: #000;
+    /* Ensure clock text is visible */
+}
+
+.weather-widget {
     position: relative;
     width: 200px;
     height: 80px;
@@ -37,45 +38,47 @@ body {
     border: 1px solid #ccc;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     margin: 25px auto;
-  }
-  
-  .weather-location {
+}
+
+.weather-location {
     position: absolute;
     bottom: 10px;
     right: 10px;
     font-size: 23px;
-  }
-  
-  .weather-description {
+}
+
+.weather-description {
     position: absolute;
     top: 15px;
     left: 10px;
     font-size: 16px;
-  }
-  
-  .weather-temperature {
+}
+
+.weather-temperature {
     position: absolute;
     bottom: 10px;
     left: 10px;
     font-size: 40px;
-  }
-  
-  .weather-icon {
+}
+
+.weather-icon {
     position: absolute;
     top: 5px;
     right: 5px;
     width: 80px;
     height: 80px;
-  }
-  
-  .grid-container {
+}
+
+.grid-container {
     margin-bottom: 20px;
     padding: 10px;
     border-radius: 8px;
     position: relative;
-  }
-  
-  .grid-container .delete-container-button {
+}
+
+.grid-container .delete-container-button,
+.grid-column .delete-column-button,
+.grid-item .delete-button {
     position: absolute;
     top: 5px;
     right: 5px;
@@ -84,30 +87,46 @@ body {
     color: gray;
     font-size: 16px;
     cursor: pointer;
-  }
-  
-  .grid-container .delete-container-button:hover {
-    color: darkgray;
-  }
-  
-  .grid-container.edit-mode {
-    border: 1px dashed #ccc;
-  }
+}
 
-  .grid-container.render-mode {
+.grid-container .delete-container-button:hover,
+.grid-column .delete-column-button:hover,
+.grid-item .delete-button:hover {
+    color: darkgray;
+}
+
+/* Edit mode visibility */
+.grid-container.edit-mode {
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.grid-container.render-mode {
     border: none;
     box-shadow: none;
-  }
-  
-  .grids-wrapper {
+}
+
+.grids-wrapper {
     display: flex;
-    gap: 10px; /* Adjust gap to fit items */
+    gap: 10px;
+    /* Adjust gap to fit items */
     overflow-x: hidden;
     justify-content: flex-start;
-  }
-  
-  .grid-column, .add-grid-button {
-    flex: 1 1 calc(20% - 8px); /* Adjust to ensure columns fit within the container */
+}
+
+/* Grid column layout */
+.grid-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    /* Ensure the delete button is positioned relative to the column */
+}
+
+.grid-column,
+.add-grid-button {
+    flex: 1 1 calc(20% - 8px);
+    /* Adjust to ensure columns fit within the container */
     max-width: calc(20% - 8px);
     background: #fff;
     padding: 10px;
@@ -119,9 +138,9 @@ body {
     cursor: pointer;
     box-sizing: border-box;
     position: relative;
-  }
-  
-  .grid-column .delete-column-button {
+}
+
+.grid-column .delete-column-button {
     position: absolute;
     top: 5px;
     right: 5px;
@@ -130,47 +149,54 @@ body {
     color: gray;
     font-size: 16px;
     cursor: pointer;
-  }
-  
-  .grid-column .delete-column-button:hover {
+}
+
+.grid-column .delete-column-button:hover {
     color: darkgray;
-  }
-  
-  .grid-column.render-mode {
+}
+
+.grid-column.render-mode {
     border: none;
     box-shadow: none;
-  }
-  
-  .add-grid-button {
+}
+
+.add-grid-button {
     background: transparent;
     border-style: dashed;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px dashed #ccc; /* Visible in edit mode */
-  }
-  
-  .edit-mode .add-grid-button {
-    display: flex;
-  }
+    border: 1px dashed #ccc;
+    /* Visible in edit mode */
+}
 
-  .grid-title {
+.edit-mode .add-grid-button {
+    display: flex;
+}
+
+.grid-title {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    text-align: center;
     font-weight: bold;
     margin-bottom: 10px;
-    text-align: center;
-    width: 100%; /* Ensure the title takes the full width */
-    box-sizing: border-box;
   }
-  
-  .grid {
+
+/* Ensure grid items take the remaining space */
+.grid {
+    padding-top: 10px;
     display: flex;
     flex-direction: column;
     gap: 10px;
-    width: 100%; /* Ensure the grid takes the full width */
+    width: 100%;
     box-sizing: border-box;
   }
-  
-  .grid-item {
+
+/* Adjust the grid item styles as needed */
+.grid-item {
     border: 1px solid #ccc;
     padding: 10px;
     text-align: center;
@@ -184,55 +210,61 @@ body {
     align-items: center;
     justify-content: center;
     height: 100px;
-    width: calc(100% - 20px); /* Adjusted width */
+    width: 100%;
     box-sizing: border-box;
   }
-  
-  .grid-item img {
+
+.grid-item img {
     max-width: 32px;
     margin-bottom: 10px;
+}
+
+.grid-item img.favicon {
+    width: 23px;
+    height: 23px;
+    margin-bottom: 5px;
   }
-  
-  .grid-item:hover {
+
+.grid-item:hover {
     transform: translateY(-5px);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-  }
-  
-  .grid-item.draggable {
+}
+
+.grid-item.draggable {
     opacity: 0.5;
-  }
-  
-  .edit-mode {
+}
+
+.edit-mode {
     display: block;
-  }
-  
-  .input-group {
+}
+
+.input-group {
     display: flex;
     gap: 10px;
     margin-bottom: 20px;
-  }
-  
-  .input-group input {
+}
+
+.input-group input {
     flex: 1;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
-  }
-  
-  .input-group button {
+}
+
+.input-group button {
     padding: 10px 20px;
     border: none;
     background-color: #007bff;
     color: #fff;
     border-radius: 5px;
     cursor: pointer;
-  }
-  
-  .input-group button:hover {
+}
+
+.input-group button:hover {
     background-color: #0056b3;
-  }
-  
-  .message {
+}
+
+.message {
     padding: 10px;
     border: 1px solid;
     border-radius: 5px;
@@ -242,21 +274,21 @@ body {
     transform: translateX(-50%);
     z-index: 1000;
     display: none;
-  }
-  
-  .message.success {
+}
+
+.message.success {
     border-color: green;
     color: green;
     background-color: #d4edda;
-  }
-  
-  .message.error {
+}
+
+.message.error {
     border-color: red;
     color: red;
     background-color: #f8d7da;
-  }
-  
-  .nav-button {
+}
+
+.nav-button {
     padding: 10px;
     border: none;
     background-color: transparent;
@@ -266,31 +298,35 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-  }
-  
-  .nav-button i {
+}
+
+.nav-button i {
     pointer-events: none;
-    width: 24px; /* Ensure icon width */
-    height: 24px; /* Ensure icon height */
-    color: gray; /* Ensure the icon is visible */
+    width: 24px;
+    /* Ensure icon width */
+    height: 24px;
+    /* Ensure icon height */
+    color: gray;
+    /* Ensure the icon is visible */
     display: flex;
     align-items: center;
     justify-content: center;
-  }
-  
-  .nav-button:hover {
+}
+
+.nav-button:hover {
     color: darkgray;
-  }
-  
-  .navigation {
+}
+
+.navigation {
     position: fixed;
     top: 20px;
     right: 20px;
     display: flex;
     gap: 10px;
-  }
-  
-  .add-grid-container-button, .addGridButton {
+}
+
+.add-grid-container-button,
+.addGridButton {
     display: none;
     margin: 10px auto;
     padding: 10px;
@@ -305,20 +341,23 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-  }
-  
-  .add-grid-container-button:hover, .addGridButton:hover {
+}
+
+.add-grid-container-button:hover,
+.addGridButton:hover {
     color: darkgray;
-  }
-  
-  .add-grid-container-button i, .addGridButton i {
+}
+
+.add-grid-container-button i,
+.addGridButton i {
     pointer-events: none;
-    width: 24px; /* Ensure icon width */
-    height: 24px; /* Ensure icon height */
-    color: gray; /* Ensure the icon is visible */
+    width: 24px;
+    /* Ensure icon width */
+    height: 24px;
+    /* Ensure icon height */
+    color: gray;
+    /* Ensure the icon is visible */
     display: flex;
     align-items: center;
     justify-content: center;
-  }
-  
-
+}

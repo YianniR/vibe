@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setWebsites, addWebsite, addGridContainer, addGrid, moveWebsite, updateGridTitle } from '../redux/websiteSlice';
+import { setWebsites, addWebsite, addGridContainer, addGrid, moveWebsite, updateGridTitle, deleteWebsite, deleteGrid, deleteGridContainer } from '../redux/websiteSlice';
 import WebsiteGrid from '../components/WebsiteGrid';
 import { loadWebsitesFromLocalStorage } from '../utils/localStorage';
 
@@ -19,7 +19,15 @@ const EditPage = () => {
   }, [dispatch]);
 
   const handleAddWebsite = () => {
-    dispatch(addWebsite({ name, url, favicon }));
+    let websiteUrl = url.trim();
+    if (!/^https?:\/\//i.test(websiteUrl)) {
+      websiteUrl = 'http://' + websiteUrl;
+    }
+    let faviconUrl = favicon.trim();
+    if (!faviconUrl) {
+      faviconUrl = `https://www.google.com/s2/favicons?domain=${new URL(websiteUrl).hostname}`;
+    }
+    dispatch(addWebsite({ name, url: websiteUrl, favicon: faviconUrl }));
     setName('');
     setUrl('');
     setFavicon('');
@@ -35,6 +43,18 @@ const EditPage = () => {
 
   const handleTitleChange = (containerIndex, gridIndex, newTitle) => {
     dispatch(updateGridTitle({ containerIndex, gridIndex, newTitle }));
+  };
+
+  const handleDeleteWebsite = (containerIndex, gridIndex, websiteIndex) => {
+    dispatch(deleteWebsite({ containerIndex, gridIndex, websiteIndex }));
+  };
+
+  const handleDeleteGrid = (containerIndex, gridIndex) => {
+    dispatch(deleteGrid({ containerIndex, gridIndex }));
+  };
+
+  const handleDeleteGridContainer = (containerIndex) => {
+    dispatch(deleteGridContainer({ containerIndex }));
   };
 
   const handleDragStart = (e, fromContainerIndex, fromGridIndex, fromWebsiteIndex) => {
@@ -61,7 +81,10 @@ const EditPage = () => {
   };
 
   const handleTileClick = (url) => {
-    window.open(url, '_blank');
+    if (!/^https?:\/\//i.test(url)) {
+      url = 'http://' + url;
+    }
+    window.location.href = url;
   };
 
   if (!isClient) {
@@ -90,6 +113,9 @@ const EditPage = () => {
         handleAddGrid={handleAddGrid}
         handleTitleChange={handleTitleChange}
         handleTileClick={handleTileClick}
+        handleDeleteWebsite={handleDeleteWebsite}
+        handleDeleteGrid={handleDeleteGrid}
+        handleDeleteGridContainer={handleDeleteGridContainer}
       />
       <button onClick={handleAddGridContainer} className="add-grid-container-button">
         <i className="fas fa-plus"></i>

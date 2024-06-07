@@ -1,11 +1,19 @@
 import React from 'react';
 
-const WebsiteGrid = ({ gridContainers = [], isEditMode, handleDragStart, handleDragOver, handleDrop, handleAddGrid, handleTitleChange, handleTileClick }) => {
+const WebsiteGrid = ({ gridContainers = [], isEditMode, handleDragStart, handleDragOver, handleDrop, handleAddGrid, handleTitleChange, handleTileClick, handleDeleteWebsite, handleDeleteGrid, handleDeleteGridContainer }) => {
   return (
     <div id="gridContainersWrapper">
       {gridContainers && gridContainers.length > 0 ? (
         gridContainers.map((container, containerIndex) => (
           <div className={`grid-container ${isEditMode ? 'edit-mode' : 'render-mode'}`} key={containerIndex}>
+            {isEditMode && (
+              <button
+                className="delete-container-button"
+                onClick={() => handleDeleteGridContainer(containerIndex)}
+              >
+                ×
+              </button>
+            )}
             <div className="grids-wrapper">
               {container.grids.map((grid, gridIndex) => (
                 <div
@@ -22,6 +30,14 @@ const WebsiteGrid = ({ gridContainers = [], isEditMode, handleDragStart, handleD
                   >
                     {grid.title}
                   </div>
+                  {isEditMode && (
+                    <button
+                      className="delete-column-button"
+                      onClick={() => handleDeleteGrid(containerIndex, gridIndex)}
+                    >
+                      ×
+                    </button>
+                  )}
                   <div className="grid">
                     {grid.websites.map((website, websiteIndex) => (
                       <div
@@ -31,8 +47,16 @@ const WebsiteGrid = ({ gridContainers = [], isEditMode, handleDragStart, handleD
                         onDragStart={(e) => isEditMode && handleDragStart(e, containerIndex, gridIndex, websiteIndex)}
                         onClick={() => !isEditMode && handleTileClick(website.url)}
                       >
-                        {website.favicon && <img src={website.favicon} alt="Favicon" />}
+                        {website.favicon && <img src={website.favicon} alt="Favicon" className="favicon" />}
                         <div>{website.name}</div>
+                        {isEditMode && (
+                          <button
+                            className="delete-button"
+                            onClick={() => handleDeleteWebsite(containerIndex, gridIndex, websiteIndex)}
+                          >
+                            ×
+                          </button>
+                        )}
                       </div>
                     ))}
                   </div>

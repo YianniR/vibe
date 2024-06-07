@@ -17,7 +17,10 @@ const HomePage = () => {
   }, [dispatch]);
 
   const handleTileClick = (url) => {
-    window.open(url, '_blank');
+    if (!/^https?:\/\//i.test(url)) {
+      url = 'http://' + url;
+    }
+    window.location.href = url;
   };
 
   if (!isClient) {
