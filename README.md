@@ -1,6 +1,6 @@
 # VIBE: Vibe Improves Browser Experience
 
-![VIBE Icon](assets/icon.png)
+![VIBE Icon](icons/icon.png)
 
 ## Overview
 
