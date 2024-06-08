@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setWebsites, addWebsite, addGridContainer, addGrid, moveWebsite, updateGridTitle, deleteWebsite, deleteGrid, deleteGridContainer } from '../redux/websiteSlice';
 import WebsiteGrid from '../components/WebsiteGrid';
 import { loadWebsitesFromLocalStorage } from '../utils/localStorage';
+import { Utils } from '../utils/utils';
 
-interface EditPageProps {
-  gridContainers: any[];
-}
-
-const EditPage: React.FC<EditPageProps> = ({ gridContainers }) => {
+const EditPage: React.FC = () => {
   const dispatch = useDispatch();
+  const gridContainers = useSelector((state: any) => state.websites.gridContainers) || [];
   const [name, setName] = useState('');
   const [url, setUrl] = useState('');
   const [favicon, setFavicon] = useState('');
@@ -22,48 +20,20 @@ const EditPage: React.FC<EditPageProps> = ({ gridContainers }) => {
   }, [dispatch]);
 
   const handleAddWebsite = () => {
-    let websiteUrl = url.trim();
-    if (!/^https?:\/\//i.test(websiteUrl)) {
-      websiteUrl = 'http://' + websiteUrl;
-    }
+    let formattedUrl = Utils.addHttp(url.trim());
     let faviconUrl = favicon.trim();
     if (!faviconUrl) {
-      faviconUrl = `https://www.google.com/s2/favicons?domain=${new URL(websiteUrl).hostname}`;
+      faviconUrl = `https://www.google.com/s2/favicons?domain=${new URL(formattedUrl).hostname}`;
     }
-    dispatch(addWebsite({ name, url: websiteUrl, favicon: faviconUrl }));
+    dispatch(addWebsite({ name, url: formattedUrl, favicon: faviconUrl }));
     setName('');
     setUrl('');
     setFavicon('');
   };
 
-  const handleAddGridContainer = () => {
-    dispatch(addGridContainer());
-  };
-
-  const handleAddGrid = (containerIndex: number) => {
-    dispatch(addGrid({ containerIndex }));
-  };
-
-  const handleTitleChange = (containerIndex: number, gridIndex: number, newTitle: string) => {
-    dispatch(updateGridTitle({ containerIndex, gridIndex, newTitle }));
-  };
-
-  const handleDeleteWebsite = (containerIndex: number, gridIndex: number, websiteIndex: number) => {
-    dispatch(deleteWebsite({ containerIndex, gridIndex, websiteIndex }));
-  };
-
-  const handleDeleteGrid = (containerIndex: number, gridIndex: number) => {
-    dispatch(deleteGrid({ containerIndex, gridIndex }));
-  };
-
-  const handleDeleteGridContainer = (containerIndex: number) => {
-    dispatch(deleteGridContainer({ containerIndex }));
-  };
-
   const handleDragStart = (e: React.DragEvent, fromContainerIndex: number, fromGridIndex: number, fromWebsiteIndex: number) => {
-    e.dataTransfer.setData('fromContainerIndex', fromContainerIndex.toString());
-    e.dataTransfer.setData('fromGridIndex', fromGridIndex.toString());
-    e.dataTransfer.setData('fromWebsiteIndex', fromWebsiteIndex.toString());
+    e.dataTransfer.setData('text/plain', `${fromContainerIndex},${fromGridIndex},${fromWebsiteIndex}`);
+    e.dataTransfer.effectAllowed = 'move';
   };
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -71,23 +41,9 @@ const EditPage: React.FC<EditPageProps> = ({ gridContainers }) => {
   };
 
   const handleDrop = (e: React.DragEvent, toContainerIndex: number, toGridIndex: number) => {
-    const fromContainerIndex = parseInt(e.dataTransfer.getData('fromContainerIndex'), 10);
-    const fromGridIndex = parseInt(e.dataTransfer.getData('fromGridIndex'), 10);
-    const fromWebsiteIndex = parseInt(e.dataTransfer.getData('fromWebsiteIndex'), 10);
-    dispatch(moveWebsite({
-      fromContainerIndex,
-      fromGridIndex,
-      fromWebsiteIndex,
-      toContainerIndex,
-      toGridIndex,
-    }));
-  };
-
-  const handleTileClick = (url: string) => {
-    if (!/^https?:\/\//i.test(url)) {
-      url = 'http://' + url;
-    }
-    window.location.href = url;
+    e.preventDefault();
+    const [fromContainerIndex, fromGridIndex, fromWebsiteIndex] = e.dataTransfer.getData('text').split(',').map(Number);
+    dispatch(moveWebsite({ fromContainerIndex, fromGridIndex, fromWebsiteIndex, toContainerIndex, toGridIndex }));
   };
 
   if (!isClient) {
@@ -97,9 +53,24 @@ const EditPage: React.FC<EditPageProps> = ({ gridContainers }) => {
   return (
     <div className="container">
       <div className="input-group">
-        <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Website Name" />
-        <input type="text" value={url} onChange={(e) => setUrl(e.target.value)} placeholder="Website URL" />
-        <input type="text" value={favicon} onChange={(e) => setFavicon(e.target.value)} placeholder="Favicon URL (optional)" />
+        <input
+          type="text"
+          placeholder="Website Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="Website URL"
+          value={url}
+          onChange={(e) => setUrl(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="Favicon URL (optional)"
+          value={favicon}
+          onChange={(e) => setFavicon(e.target.value)}
+        />
         <button onClick={handleAddWebsite}>Add Website</button>
       </div>
       <WebsiteGrid
@@ -108,14 +79,18 @@ const EditPage: React.FC<EditPageProps> = ({ gridContainers }) => {
         handleDragStart={handleDragStart}
         handleDragOver={handleDragOver}
         handleDrop={handleDrop}
-        handleAddGrid={handleAddGrid}
-        handleTitleChange={handleTitleChange}
-        handleTileClick={handleTileClick}
-        handleDeleteWebsite={handleDeleteWebsite}
-        handleDeleteGrid={handleDeleteGrid}
-        handleDeleteGridContainer={handleDeleteGridContainer}
+        handleAddGrid={(containerIndex) => {
+          if (gridContainers[containerIndex]) {
+            dispatch(addGrid({ containerIndex }));
+          }
+        }}
+        handleTitleChange={(containerIndex, gridIndex, newTitle) => dispatch(updateGridTitle({ containerIndex, gridIndex, newTitle }))}
+        handleTileClick={() => {}}
+        handleDeleteWebsite={(containerIndex, gridIndex, websiteIndex) => dispatch(deleteWebsite({ containerIndex, gridIndex, websiteIndex }))}
+        handleDeleteGrid={(containerIndex, gridIndex) => dispatch(deleteGrid({ containerIndex, gridIndex }))}
+        handleDeleteGridContainer={(containerIndex) => dispatch(deleteGridContainer({ containerIndex }))}
       />
-      <button onClick={handleAddGridContainer} className="add-grid-container-button">
+      <button className="add-grid-container-button" onClick={() => dispatch(addGridContainer())}>
         <i className="fas fa-plus"></i>
       </button>
     </div>

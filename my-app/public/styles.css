@@ -1,6 +1,5 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f9;
     margin: 0;
     padding: 0;
     display: flex;
@@ -8,17 +7,29 @@ body {
     align-items: center;
     height: 100vh;
     overflow: hidden;
-}
+    background-color: var(--background-color);
+    color: var(--text-color);
+  }
+  
+  body.light {
+    --background-color: #f4f4f9;
+    --text-color: #000;
+  }
+  
+  body.dark {
+    --background-color: #333;
+    --text-color: #fff;
+  }
 
-.container {
-    width: 50vw; /* Adjusted to take up 90% of the viewport width */
+  .container {
+    max-width: 1200px;
+    width: 100%;
     padding: 20px;
     background: #fff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
-    overflow: auto;
-    /* Allow vertical scroll if needed */
-}
+    overflow: auto; /* Allow vertical scroll if needed */
+  }
 
 .clock {
     font-size: 5rem;
@@ -242,27 +253,27 @@ body {
     display: flex;
     gap: 10px;
     margin-bottom: 20px;
-}
-
-.input-group input {
+  }
+  
+  .input-group input {
     flex: 1;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
-}
-
-.input-group button {
+  }
+  
+  .input-group button {
     padding: 10px 20px;
     border: none;
     background-color: #007bff;
     color: #fff;
     border-radius: 5px;
     cursor: pointer;
-}
-
-.input-group button:hover {
+  }
+  
+  .input-group button:hover {
     background-color: #0056b3;
-}
+  }
 
 .message {
     padding: 10px;

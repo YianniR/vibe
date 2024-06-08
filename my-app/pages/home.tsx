@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setWebsites } from '../redux/websiteSlice';
 import WebsiteGrid from '../components/WebsiteGrid';
 import WeatherWidget from '../components/WeatherWidget';
 import { loadWebsitesFromLocalStorage } from '../utils/localStorage';
 
-interface HomePageProps {
-  gridContainers: any[];
-}
-
-const HomePage: React.FC<HomePageProps> = ({ gridContainers }) => {
+const HomePage: React.FC = () => {
   const dispatch = useDispatch();
+  const gridContainers = useSelector((state: any) => state.websites.gridContainers) || [];
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {

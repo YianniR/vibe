@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 
 interface WebsiteGridProps {
   gridContainers: any[];
@@ -27,6 +28,19 @@ const WebsiteGrid: React.FC<WebsiteGridProps> = ({
   handleDeleteGrid,
   handleDeleteGridContainer
 }) => {
+  const { gridColumns, tileSize, bordersAndShadows } = useSelector((state: any) => state.settings);
+
+  const gridStyles = {
+    gridTemplateColumns: `repeat(${gridColumns}, 1fr)`,
+  };
+
+  const tileStyles = {
+    width: tileSize === 'small' ? '100px' : tileSize === 'medium' ? '150px' : '200px',
+    height: tileSize === 'small' ? '100px' : tileSize === 'medium' ? '150px' : '200px',
+    border: bordersAndShadows ? '1px solid #ccc' : 'none',
+    boxShadow: bordersAndShadows ? '0 2px 5px rgba(0, 0, 0, 0.1)' : 'none',
+  };
+
   return (
     <div id="gridContainersWrapper">
       {gridContainers && gridContainers.length > 0 ? (
@@ -40,7 +54,7 @@ const WebsiteGrid: React.FC<WebsiteGridProps> = ({
                 ×
               </button>
             )}
-            <div className="grids-wrapper">
+            <div className="grids-wrapper" style={gridStyles}>
               {container.grids.map((grid, gridIndex) => (
                 <div
                   className="grid-column"
@@ -52,7 +66,7 @@ const WebsiteGrid: React.FC<WebsiteGridProps> = ({
                     className="grid-title"
                     contentEditable={isEditMode}
                     suppressContentEditableWarning={true}
-                    onBlur={(e) => handleTitleChange(containerIndex, gridIndex, e.target.textContent)}
+                    onBlur={(e) => handleTitleChange(containerIndex, gridIndex, e.target.textContent || '')}
                   >
                     {grid.title}
                   </div>
@@ -69,6 +83,7 @@ const WebsiteGrid: React.FC<WebsiteGridProps> = ({
                       <div
                         className="grid-item"
                         key={websiteIndex}
+                        style={tileStyles}
                         draggable={isEditMode}
                         onDragStart={(e) => isEditMode && handleDragStart(e, containerIndex, gridIndex, websiteIndex)}
                         onClick={() => !isEditMode && handleTileClick(website.url)}
