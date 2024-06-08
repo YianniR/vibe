@@ -1,51 +1,42 @@
-import { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { setWebsites } from '../redux/websiteSlice';
-import WebsiteGrid from '../components/WebsiteGrid';
-import WeatherWidget from '../components/WeatherWidget';
-import { loadWebsitesFromLocalStorage } from '../utils/localStorage';
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+import HomePage from './home';
+import EditPage from './edit';
+import SettingsPage from './settings';
 
-const HomePage = () => {
-  const dispatch = useDispatch();
-  const gridContainers = useSelector((state) => state.websites.gridContainers) || [];
-  const [isClient, setIsClient] = useState(false);
+const Index: React.FC = () => {
+  const [currentPage, setCurrentPage] = useState('home');
+  const gridContainers = useSelector((state: any) => state.websites.gridContainers) || [];
 
-  useEffect(() => {
-    setIsClient(true);
-    const websites = loadWebsitesFromLocalStorage();
-    dispatch(setWebsites(websites));
-  }, [dispatch]);
-
-  const handleTileClick = (url) => {
-    if (!/^https?:\/\//i.test(url)) {
-      url = 'http://' + url;
+  const renderPage = () => {
+    switch (currentPage) {
+      case 'home':
+        return <HomePage gridContainers={gridContainers} />;
+      case 'edit':
+        return <EditPage gridContainers={gridContainers} />;
+      case 'settings':
+        return <SettingsPage />;
+      default:
+        return <HomePage gridContainers={gridContainers} />;
     }
-    window.location.href = url;
   };
 
-  if (!isClient) {
-    return null;
-  }
-
   return (
-    <div className="container">
+    <div className="app-container">
       <div className="navigation">
-        <button onClick={() => (window.location.href = '/edit')} className="nav-button">
+        <button onClick={() => setCurrentPage('home')} className="nav-button">
+          <i className="fas fa-home"></i>
+        </button>
+        <button onClick={() => setCurrentPage('edit')} className="nav-button">
           <i className="fas fa-pencil-alt"></i>
         </button>
-        <button onClick={() => (window.location.href = '/settings')} className="nav-button">
+        <button onClick={() => setCurrentPage('settings')} className="nav-button">
           <i className="fas fa-cog"></i>
         </button>
       </div>
-      <div className="message" id="message"></div>
-      <div className="clock" id="clock"></div>
-      <WeatherWidget />
-      <WebsiteGrid
-        gridContainers={gridContainers}
-        handleTileClick={handleTileClick}
-      />
+      {renderPage()}
     </div>
   );
 };
 
-export default HomePage;
+export default Index;

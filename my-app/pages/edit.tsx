@@ -1,12 +1,15 @@
-import { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { setWebsites, addWebsite, addGridContainer, addGrid, moveWebsite, updateGridTitle, deleteWebsite, deleteGrid, deleteGridContainer } from '../redux/websiteSlice';
 import WebsiteGrid from '../components/WebsiteGrid';
 import { loadWebsitesFromLocalStorage } from '../utils/localStorage';
 
-const EditPage = () => {
+interface EditPageProps {
+  gridContainers: any[];
+}
+
+const EditPage: React.FC<EditPageProps> = ({ gridContainers }) => {
   const dispatch = useDispatch();
-  const gridContainers = useSelector((state) => state.websites.gridContainers) || [];
   const [name, setName] = useState('');
   const [url, setUrl] = useState('');
   const [favicon, setFavicon] = useState('');
@@ -37,50 +40,50 @@ const EditPage = () => {
     dispatch(addGridContainer());
   };
 
-  const handleAddGrid = (containerIndex) => {
+  const handleAddGrid = (containerIndex: number) => {
     dispatch(addGrid({ containerIndex }));
   };
 
-  const handleTitleChange = (containerIndex, gridIndex, newTitle) => {
+  const handleTitleChange = (containerIndex: number, gridIndex: number, newTitle: string) => {
     dispatch(updateGridTitle({ containerIndex, gridIndex, newTitle }));
   };
 
-  const handleDeleteWebsite = (containerIndex, gridIndex, websiteIndex) => {
+  const handleDeleteWebsite = (containerIndex: number, gridIndex: number, websiteIndex: number) => {
     dispatch(deleteWebsite({ containerIndex, gridIndex, websiteIndex }));
   };
 
-  const handleDeleteGrid = (containerIndex, gridIndex) => {
+  const handleDeleteGrid = (containerIndex: number, gridIndex: number) => {
     dispatch(deleteGrid({ containerIndex, gridIndex }));
   };
 
-  const handleDeleteGridContainer = (containerIndex) => {
+  const handleDeleteGridContainer = (containerIndex: number) => {
     dispatch(deleteGridContainer({ containerIndex }));
   };
 
-  const handleDragStart = (e, fromContainerIndex, fromGridIndex, fromWebsiteIndex) => {
-    e.dataTransfer.setData('fromContainerIndex', fromContainerIndex);
-    e.dataTransfer.setData('fromGridIndex', fromGridIndex);
-    e.dataTransfer.setData('fromWebsiteIndex', fromWebsiteIndex);
+  const handleDragStart = (e: React.DragEvent, fromContainerIndex: number, fromGridIndex: number, fromWebsiteIndex: number) => {
+    e.dataTransfer.setData('fromContainerIndex', fromContainerIndex.toString());
+    e.dataTransfer.setData('fromGridIndex', fromGridIndex.toString());
+    e.dataTransfer.setData('fromWebsiteIndex', fromWebsiteIndex.toString());
   };
 
-  const handleDragOver = (e) => {
+  const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
   };
 
-  const handleDrop = (e, toContainerIndex, toGridIndex) => {
-    const fromContainerIndex = e.dataTransfer.getData('fromContainerIndex');
-    const fromGridIndex = e.dataTransfer.getData('fromGridIndex');
-    const fromWebsiteIndex = e.dataTransfer.getData('fromWebsiteIndex');
+  const handleDrop = (e: React.DragEvent, toContainerIndex: number, toGridIndex: number) => {
+    const fromContainerIndex = parseInt(e.dataTransfer.getData('fromContainerIndex'), 10);
+    const fromGridIndex = parseInt(e.dataTransfer.getData('fromGridIndex'), 10);
+    const fromWebsiteIndex = parseInt(e.dataTransfer.getData('fromWebsiteIndex'), 10);
     dispatch(moveWebsite({
-      fromContainerIndex: parseInt(fromContainerIndex, 10),
-      fromGridIndex: parseInt(fromGridIndex, 10),
-      fromWebsiteIndex: parseInt(fromWebsiteIndex, 10),
+      fromContainerIndex,
+      fromGridIndex,
+      fromWebsiteIndex,
       toContainerIndex,
       toGridIndex,
     }));
   };
 
-  const handleTileClick = (url) => {
+  const handleTileClick = (url: string) => {
     if (!/^https?:\/\//i.test(url)) {
       url = 'http://' + url;
     }
@@ -93,11 +96,6 @@ const EditPage = () => {
 
   return (
     <div className="container">
-      <div className="navigation">
-        <button onClick={() => (window.location.href = '/')} className="nav-button">
-          <i className="fas fa-home"></i>
-        </button>
-      </div>
       <div className="input-group">
         <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Website Name" />
         <input type="text" value={url} onChange={(e) => setUrl(e.target.value)} placeholder="Website URL" />

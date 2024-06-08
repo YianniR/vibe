@@ -1,10 +1,11 @@
 import '../public/styles.css';
 import { useEffect, useState } from 'react';
+import { AppProps } from 'next/app';
 import { Provider } from 'react-redux';
 import store from '../redux/store';
 import { updateTime } from '../utils/clock';
 
-function MyApp({ Component, pageProps }) {
+function MyApp({ Component, pageProps }: AppProps) {
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
