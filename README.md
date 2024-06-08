@@ -1,6 +1,8 @@
 # VIBE: Vibe Improves Browser Experience
 
-![VIBE Icon](icons/icon.png)
+<p align="center">
+  <img src="icons/icon.png" alt="VIBE Icon" width="100" height="100">
+</p>
 
 ## Overview
 
