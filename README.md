@@ -22,8 +22,8 @@ VIBE is a Firefox extension that replaces your default homepage with a customiza
 
 1. **Clone the repository**:
     ```bash
-    git clone https://github.com/yourusername/vibe-extension.git
-    cd vibe-extension
+    git clone https://github.com/yiannir/vibe.git
+    cd vibe
     ```
 
 2. **Install dependencies**:
@@ -37,8 +37,7 @@ VIBE is a Firefox extension that replaces your default homepage with a customiza
     ```
 
 4. **Load the extension in Firefox**:
-    - Open Firefox and go to `about:debugging`.
-    - Click "This Firefox" on the sidebar.
+    - Open Firefox and go to `about:debugging#/runtime/this-firefox`.
     - Click "Load Temporary Add-on" and select the `manifest.json` file in the `out` directory.
 
 ## Donation
