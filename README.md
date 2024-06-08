@@ -1,5 +1,7 @@
 # VIBE: Vibe Improves Browser Experience
 
+![VIBE Icon](assets/icon.png)
+
 ## Overview
 
 VIBE is a Firefox extension that replaces your default homepage with a customizable grid of website tiles. Users can add, edit, and delete websites, organize them into grids, and personalize the appearance of their homepage. Additional features include a weather widget and a real-time clock.
@@ -41,7 +43,7 @@ VIBE is a Firefox extension that replaces your default homepage with a customiza
 
 If you find VIBE useful, consider donating to support its development:
 
-- [Buy Me a Coffee](https://www.buymeacoffee.com/yourusername)
+- [Buy Me a Coffee](https://buymeacoffee.com/yiannis)
 
 ## License
 
