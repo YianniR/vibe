@@ -2,7 +2,6 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 
 interface WebsiteGridProps {
-  gridContainers: any[];
   isEditMode: boolean;
   handleDragStart: (e: React.DragEvent, fromContainerIndex: number, fromGridIndex: number, fromWebsiteIndex: number) => void;
   handleDragOver: (e: React.DragEvent) => void;
@@ -16,7 +15,6 @@ interface WebsiteGridProps {
 }
 
 const WebsiteGrid: React.FC<WebsiteGridProps> = ({
-  gridContainers,
   isEditMode,
   handleDragStart,
   handleDragOver,
@@ -28,7 +26,9 @@ const WebsiteGrid: React.FC<WebsiteGridProps> = ({
   handleDeleteGrid,
   handleDeleteGridContainer
 }) => {
-  const { gridColumns, tileSize, bordersAndShadows } = useSelector((state: any) => state.settings);
+  const gridContainers = useSelector((state: any) => state.websites.gridContainers);
+
+  const { gridColumns } = useSelector((state: any) => state.settings);
 
   const gridStyles = {
     gridTemplateColumns: `repeat(${gridColumns}, 1fr)`,
@@ -37,7 +37,7 @@ const WebsiteGrid: React.FC<WebsiteGridProps> = ({
   return (
     <div id="gridContainersWrapper">
       {gridContainers && gridContainers.length > 0 ? (
-        gridContainers.map((container, containerIndex) => (
+        gridContainers.map((container: any, containerIndex: number) => (
           <div className={`grid-container ${isEditMode ? 'edit-mode' : 'render-mode'}`} key={containerIndex}>
             {isEditMode && (
               <button
@@ -48,7 +48,7 @@ const WebsiteGrid: React.FC<WebsiteGridProps> = ({
               </button>
             )}
             <div className="grids-wrapper" style={gridStyles}>
-              {container.grids.map((grid, gridIndex) => (
+              {container.grids.map((grid: any, gridIndex: number) => (
                 <div
                   className="grid-column"
                   key={gridIndex}
@@ -72,7 +72,7 @@ const WebsiteGrid: React.FC<WebsiteGridProps> = ({
                     </button>
                   )}
                   <div className="grid">
-                    {grid.websites.map((website, websiteIndex) => (
+                    {grid.websites.map((website: any, websiteIndex: number) => (
                       <div
                         className="grid-item"
                         key={websiteIndex}

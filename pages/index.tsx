@@ -1,23 +1,21 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
 import HomePage from './home';
 import EditPage from './edit';
 import SettingsPage from './settings';
 
-const Index: React.FC = () => {
+const App = () => {
   const [currentPage, setCurrentPage] = useState('home');
-  const gridContainers = useSelector((state: any) => state.websites.gridContainers) || [];
 
   const renderPage = () => {
     switch (currentPage) {
       case 'home':
-        return <HomePage gridContainers={gridContainers} />;
+        return <HomePage />;
       case 'edit':
-        return <EditPage gridContainers={gridContainers} />;
+        return <EditPage />;
       case 'settings':
         return <SettingsPage />;
       default:
-        return <HomePage gridContainers={gridContainers} />;
+        return <HomePage />;
     }
   };
 
@@ -39,4 +37,4 @@ const Index: React.FC = () => {
   );
 };
 
-export default Index;
+export default App;

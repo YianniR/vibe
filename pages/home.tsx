@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { setWebsites } from '../redux/websiteSlice';
 import WebsiteGrid from '../components/WebsiteGrid';
 import WeatherWidget from '../components/WeatherWidget';
 import { loadWebsitesFromLocalStorage } from '../utils/localStorage';
 
-const HomePage: React.FC = () => {
+const HomePage = () => {
   const dispatch = useDispatch();
-  const gridContainers = useSelector((state: any) => state.websites.gridContainers) || [];
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -23,6 +22,15 @@ const HomePage: React.FC = () => {
     window.location.href = url;
   };
 
+  const handleDragStart = () => {};
+  const handleDragOver = () => {};
+  const handleDrop = () => {};
+  const handleAddGrid = () => {};
+  const handleTitleChange = () => {};
+  const handleDeleteWebsite = () => {};
+  const handleDeleteGrid = () => {};
+  const handleDeleteGridContainer = () => {};
+
   if (!isClient) {
     return null;
   }
@@ -33,17 +41,16 @@ const HomePage: React.FC = () => {
       <div className="clock" id="clock"></div>
       <WeatherWidget />
       <WebsiteGrid
-        gridContainers={gridContainers}
         isEditMode={false}
-        handleDragStart={() => {}}
-        handleDragOver={() => {}}
-        handleDrop={() => {}}
-        handleAddGrid={() => {}}
-        handleTitleChange={() => {}}
+        handleDragStart={handleDragStart}
+        handleDragOver={handleDragOver}
+        handleDrop={handleDrop}
+        handleAddGrid={handleAddGrid}
+        handleTitleChange={handleTitleChange}
         handleTileClick={handleTileClick}
-        handleDeleteWebsite={() => {}}
-        handleDeleteGrid={() => {}}
-        handleDeleteGridContainer={() => {}}
+        handleDeleteWebsite={handleDeleteWebsite}
+        handleDeleteGrid={handleDeleteGrid}
+        handleDeleteGridContainer={handleDeleteGridContainer}
       />
     </div>
   );

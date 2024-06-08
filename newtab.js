@@ -4,10 +4,10 @@ import { Provider } from 'react-redux';
 import store from './redux/store';
 import App from './App';
 
-const Popup = () => (
+const NewTab = () => (
   <Provider store={store}>
     <App />
   </Provider>
 );
 
-ReactDOM.render(<Popup />, document.getElementById('app'));
+ReactDOM.render(<NewTab />, document.getElementById('app'));

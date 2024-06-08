@@ -1,6 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setWebsites, addWebsite, addGridContainer, addGrid, moveWebsite, updateGridTitle, deleteWebsite, deleteGrid, deleteGridContainer } from '../redux/websiteSlice';
+import {
+  setWebsites,
+  addWebsite,
+  addGridContainer,
+  addGrid,
+  moveWebsite,
+  updateGridTitle,
+  deleteWebsite,
+  deleteGrid,
+  deleteGridContainer,
+} from '../redux/websiteSlice';
 import WebsiteGrid from '../components/WebsiteGrid';
 import { loadWebsitesFromLocalStorage } from '../utils/localStorage';
 import { Utils } from '../utils/utils';
@@ -58,23 +68,25 @@ const EditPage: React.FC = () => {
           placeholder="Website Name"
           value={name}
           onChange={(e) => setName(e.target.value)}
+          className="input-field"
         />
         <input
           type="text"
           placeholder="Website URL"
           value={url}
           onChange={(e) => setUrl(e.target.value)}
+          className="input-field"
         />
         <input
           type="text"
           placeholder="Favicon URL (optional)"
           value={favicon}
           onChange={(e) => setFavicon(e.target.value)}
+          className="input-field"
         />
-        <button onClick={handleAddWebsite}>Add Website</button>
+        <button onClick={handleAddWebsite} className="add-website-button">Add Website</button>
       </div>
       <WebsiteGrid
-        gridContainers={gridContainers}
         isEditMode={true}
         handleDragStart={handleDragStart}
         handleDragOver={handleDragOver}
