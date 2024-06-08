@@ -7,11 +7,11 @@
       "48": "icons/icon.png"
     },
     "browser_action": {
-      "default_popup": "popup.html",
+      "default_popup": "out/index.html",
       "default_icon": "icons/icon.png"
     },
     "chrome_url_overrides": {
-      "newtab": "newtab.html"
+      "newtab": "out/index.html"
     },
     "permissions": [
       "storage",

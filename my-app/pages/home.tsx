@@ -37,7 +37,16 @@ const HomePage: React.FC<HomePageProps> = ({ gridContainers }) => {
       <WeatherWidget />
       <WebsiteGrid
         gridContainers={gridContainers}
+        isEditMode={false}
+        handleDragStart={() => {}}
+        handleDragOver={() => {}}
+        handleDrop={() => {}}
+        handleAddGrid={() => {}}
+        handleTitleChange={() => {}}
         handleTileClick={handleTileClick}
+        handleDeleteWebsite={() => {}}
+        handleDeleteGrid={() => {}}
+        handleDeleteGridContainer={() => {}}
       />
     </div>
   );

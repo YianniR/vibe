@@ -1,6 +1,32 @@
 import React from 'react';
 
-const WebsiteGrid = ({ gridContainers = [], isEditMode, handleDragStart, handleDragOver, handleDrop, handleAddGrid, handleTitleChange, handleTileClick, handleDeleteWebsite, handleDeleteGrid, handleDeleteGridContainer }) => {
+interface WebsiteGridProps {
+  gridContainers: any[];
+  isEditMode: boolean;
+  handleDragStart: (e: React.DragEvent, fromContainerIndex: number, fromGridIndex: number, fromWebsiteIndex: number) => void;
+  handleDragOver: (e: React.DragEvent) => void;
+  handleDrop: (e: React.DragEvent, toContainerIndex: number, toGridIndex: number) => void;
+  handleAddGrid: (containerIndex: number) => void;
+  handleTitleChange: (containerIndex: number, gridIndex: number, newTitle: string) => void;
+  handleTileClick: (url: string) => void;
+  handleDeleteWebsite: (containerIndex: number, gridIndex: number, websiteIndex: number) => void;
+  handleDeleteGrid: (containerIndex: number, gridIndex: number) => void;
+  handleDeleteGridContainer: (containerIndex: number) => void;
+}
+
+const WebsiteGrid: React.FC<WebsiteGridProps> = ({
+  gridContainers,
+  isEditMode,
+  handleDragStart,
+  handleDragOver,
+  handleDrop,
+  handleAddGrid,
+  handleTitleChange,
+  handleTileClick,
+  handleDeleteWebsite,
+  handleDeleteGrid,
+  handleDeleteGridContainer
+}) => {
   return (
     <div id="gridContainersWrapper">
       {gridContainers && gridContainers.length > 0 ? (
