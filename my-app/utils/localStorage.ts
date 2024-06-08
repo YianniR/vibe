@@ -13,6 +13,7 @@ export const loadSettingsFromLocalStorage = () => {
   };
   
   
+  
   export const saveWebsitesToLocalStorage = (websites: any) => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('websites', JSON.stringify(websites));

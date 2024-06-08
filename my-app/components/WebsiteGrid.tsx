@@ -34,13 +34,6 @@ const WebsiteGrid: React.FC<WebsiteGridProps> = ({
     gridTemplateColumns: `repeat(${gridColumns}, 1fr)`,
   };
 
-  const tileStyles = {
-    width: tileSize === 'small' ? '100px' : tileSize === 'medium' ? '150px' : '200px',
-    height: tileSize === 'small' ? '100px' : tileSize === 'medium' ? '150px' : '200px',
-    border: bordersAndShadows ? '1px solid #ccc' : 'none',
-    boxShadow: bordersAndShadows ? '0 2px 5px rgba(0, 0, 0, 0.1)' : 'none',
-  };
-
   return (
     <div id="gridContainersWrapper">
       {gridContainers && gridContainers.length > 0 ? (
@@ -83,7 +76,6 @@ const WebsiteGrid: React.FC<WebsiteGridProps> = ({
                       <div
                         className="grid-item"
                         key={websiteIndex}
-                        style={tileStyles}
                         draggable={isEditMode}
                         onDragStart={(e) => isEditMode && handleDragStart(e, containerIndex, gridIndex, websiteIndex)}
                         onClick={() => !isEditMode && handleTileClick(website.url)}

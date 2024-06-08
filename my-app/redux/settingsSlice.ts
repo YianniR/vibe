@@ -3,10 +3,7 @@ import { loadSettingsFromLocalStorage, saveSettingsToLocalStorage } from '../uti
 
 const initialState = loadSettingsFromLocalStorage() || {
   theme: 'light',
-  gridColumns: 3,
-  tileSize: 'medium',
   weatherLocation: 'London',
-  bordersAndShadows: true,
 };
 
 const settingsSlice = createSlice({
@@ -17,24 +14,12 @@ const settingsSlice = createSlice({
       state.theme = action.payload;
       saveSettingsToLocalStorage(state);
     },
-    setGridColumns(state, action) {
-      state.gridColumns = action.payload;
-      saveSettingsToLocalStorage(state);
-    },
-    setTileSize(state, action) {
-      state.tileSize = action.payload;
-      saveSettingsToLocalStorage(state);
-    },
     setWeatherLocation(state, action) {
       state.weatherLocation = action.payload;
-      saveSettingsToLocalStorage(state);
-    },
-    toggleBordersAndShadows(state) {
-      state.bordersAndShadows = !state.bordersAndShadows;
       saveSettingsToLocalStorage(state);
     },
   },
 });
 
-export const { setTheme, setGridColumns, setTileSize, setWeatherLocation, toggleBordersAndShadows } = settingsSlice.actions;
+export const { setTheme, setWeatherLocation } = settingsSlice.actions;
 export default settingsSlice.reducer;
